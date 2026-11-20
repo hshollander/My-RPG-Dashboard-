@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f6f3">
+<title>My RPG Dashboard</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#20211f;--muted:#777970;--line:#e7e7e1;--accent:#30332e;--soft:#efefe9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:760px;margin:auto;padding:28px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.eyebrow{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}.date{font-size:13px;color:var(--muted)}
+h1{font-size:32px;letter-spacing:-1.2px;margin:7px 0 5px}.sub{color:var(--muted);margin:0 0 24px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.level{font-size:13px;color:var(--muted)}.xp{font-size:26px;font-weight:650;letter-spacing:-.7px}.bar{height:7px;background:var(--soft);border-radius:20px;overflow:hidden;margin:13px 0 5px}.fill{height:100%;width:0;background:#555b50;border-radius:20px}
+h2{font-size:17px;margin:4px 0 14px;letter-spacing:-.3px}.small{font-size:12px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.attr{border:1px solid var(--line);border-radius:13px;padding:13px}.attr strong{display:block;font-size:14px}.attr .score{font-size:23px;font-weight:650;margin-top:8px}.attr input{width:100%;accent-color:#4f5549}.quest{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.quest:first-of-type{border-top:0}.quest input{width:19px;height:19px;margin:1px 0 0;accent-color:#454b40}.quest label{flex:1;line-height:1.35}.quest small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.points{font-size:12px;color:var(--muted);white-space:nowrap}
+button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;color:var(--ink);font:inherit;font-size:13px}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button:disabled{opacity:.4}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;min-height:85px;resize:vertical;background:#fff}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.day{border:1px solid var(--line);border-radius:10px;padding:9px 2px;text-align:center;font-size:11px;color:var(--muted)}.day input{display:block;margin:7px auto 0;accent-color:#454b40}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body><main>
+<div class="top"><div class="eyebrow">PERSONAL DEVELOPMENT RPG</div><div class="date" id="today"></div></div>
+<h1>My character</h1><p class="sub">Build a better life, one completed quest at a time.</p>
+<section class="card">
+ <div class="row"><div><div class="level" id="level">LEVEL 1</div><div class="xp"><span id="total">0</span> XP</div></div><div class="small" id="next">1,000 XP to next level</div></div>
+ <div class="bar"><div class="fill" id="progress"></div></div><div class="small" id="progressText">0 / 1,000 XP</div>
+</section>
+<section class="card"><div class="row"><h2>Attributes</h2><span class="small">Starting character</span></div><div class="grid" id="attributes"></div><p class="small" style="margin-bottom:0">Edit your starting scores as you assess yourself. Keep all nine equally important.</p></section>
+<section class="card"><div class="row"><h2>Daily quest board</h2><span class="small" id="questCount">0 / 10 complete</span></div><div id="quests"></div><div class="actions"><button class="primary" id="bank">Bank today's XP</button><button id="reset">Reset today's quests</button></div><p class="small">Each quest earns 10 XP. Complete all ten for a 30 XP perfect-day bonus.</p></section>
+<section class="card"><h2>Weekly challenge</h2><p class="small">Tick each day you make meaningful progress on your weekly challenge.</p><div class="week" id="week"></div></section>
+<section class="card"><h2>Daily review</h2><textarea id="review" placeholder="What went well? What could be better tomorrow?"></textarea><div class="actions"><button id="saveReview">Save review</button><button id="export">Export backup</button></div><p class="small" id="saved"></p></section>
+<p class="small">Your progress is saved in this browser on this device. Export a backup regularly. Clearing browser data may erase local progress.</p>
+</main>
+<script>
+const attrs=["Physical","Intellectual","Discipline","Financial","Social","Emotional","Practical","Experiential","Character"];
+const quests=["Move your body appropriately","Eat to support your health","Drink enough water","Read for at least 10 minutes","Learn something new","Make progress on quitting snus","Avoid or interrupt nail biting","Complete one useful financial action","Do one task you've been putting off","Reflect and plan tomorrow"];
+const key="myRpgDashboardV1";
+let data={xp:0,scores:{},week:{},review:"",done:{},lastDay:new Date().toDateString()};
+try{data={...data,...JSON.parse(localStorage.getItem(key)||"{}")}}catch(e){}
+function save(){localStorage.setItem(key,JSON.stringify(data))}
+function render(){
+ document.getElementById("today").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+ let level=Math.floor(data.xp/1000)+1, within=data.xp%1000;
+ document.getElementById("level").textContent="LEVEL "+level;
+ document.getElementById("total").textContent=data.xp.toLocaleString();
+ document.getElementById("next").textContent=(1000-within).toLocaleString()+" XP to next level";
+ document.getElementById("progress").style.width=(within/10)+"%";
+ document.getElementById("progressText").textContent=within.toLocaleString()+" / 1,000 XP";
+ document.getElementById("attributes").innerHTML=attrs.map(a=>`<div class="attr"><strong>${a}</strong><div class="score" id="score-${a}">${data.scores[a]??1}</div><input aria-label="${a} score" type="range" min="1" max="100" value="${data.scores[a]??1}" data-attr="${a}"></div>`).join("");
+ document.querySelectorAll("[data-attr]").forEach(el=>el.oninput=()=>{data.scores[el.dataset.attr]=+el.value;document.getElementById("score-"+el.dataset.attr).textContent=el.value;save()});
+ document.getElementById("quests").innerHTML=quests.map((q,i)=>`<div class="quest"><input type="checkbox" id="q${i}" ${data.done[i]?"checked":""}><label for="q${i}">${q}<small>Daily quest</small></label><span class="points">+10 XP</span></div>`).join("");
+ document.querySelectorAll("#quests input").forEach(el=>el.onchange=()=>{data.done[el.id.slice(1)]=el.checked;save();count()});
+ count();
+ document.getElementById("week").innerHTML=["M","T","W","T","F","S","S"].map((d,i)=>`<label class="day">${d}<input type="checkbox" data-week="${i}" ${data.week[i]?"checked":""}></label>`).join("");
+ document.querySelectorAll("[data-week]").forEach(el=>el.onchange=()=>{data.week[el.dataset.week]=el.checked;save()});
+ document.getElementById("review").value=data.review||"";
+}
+function count(){let n=quests.filter((q,i)=>data.done[i]).length;document.getElementById("questCount").textContent=n+" / 10 complete"}
+document.getElementById("bank").onclick=()=>{let n=quests.filter((q,i)=>data.done[i]).length;if(!n){alert("Complete a quest before banking XP.");return}let earned=n*10+(n===10?30:0);data.xp+=earned;data.done={};save();render();alert("+"+earned+" XP banked. Keep going.");};
+document.getElementById("reset").onclick=()=>{if(confirm("Reset today's quest ticks? This won't remove XP already banked.")){data.done={};save();render()}};
+document.getElementById("saveReview").onclick=()=>{data.review=document.getElementById("review").value;save();document.getElementById("saved").textContent="Review saved."};
+document.getElementById("export").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="my-rpg-backup.json";a.click();URL.revokeObjectURL(url)};
+render();save();
+</script></body></html>
