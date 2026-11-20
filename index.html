@@ -1,54 +1,600 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f5f1"><title>My RPG</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f5f1">
+<title>My RPG</title>
 <style>
-:root{--bg:#f5f5f1;--card:#fff;--ink:#20221f;--muted:#777b72;--line:#e7e8e1;--accent:#30372e;--soft:#eef0e9;--good:#456b4d;--warn:#936c35}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:760px;margin:auto;padding:25px 17px 55px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.eyebrow{font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}.date,.muted,.small{color:var(--muted)}.date,.small{font-size:12px}h1{font-size:32px;letter-spacing:-1.2px;margin:7px 0 4px}.sub{margin:0 0 22px;color:var(--muted);font-size:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;margin:13px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}h2{font-size:17px;letter-spacing:-.3px;margin:2px 0 13px}.level{font-size:12px;color:var(--muted)}.xp{font-size:27px;font-weight:700;letter-spacing:-.8px}.bar{height:7px;background:var(--soft);border-radius:10px;overflow:hidden;margin:12px 0 6px}.fill{height:100%;background:#59634f;border-radius:10px;width:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.attr{border:1px solid var(--line);border-radius:12px;padding:12px}.attr strong{font-size:13px}.scoreline{display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 6px}.score{font-size:23px;font-weight:700}.delta{font-size:11px;color:var(--muted)}.mini{height:5px;background:var(--soft);border-radius:10px;overflow:hidden}.mini span{display:block;height:100%;background:#697460}.reason{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.35}.quest{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}.quest:first-child{border-top:0}.quest input{width:19px;height:19px;margin:1px 0 0;accent-color:#454e40}.quest label{flex:1;line-height:1.35}.quest small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.points{font-size:11px;color:var(--muted);white-space:nowrap}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}button{border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 13px;color:var(--ink);font:inherit;font-size:13px}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button:disabled{opacity:.45}textarea{width:100%;min-height:84px;border:1px solid var(--line);border-radius:11px;padding:11px;font:inherit;resize:vertical}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid var(--line);border-radius:9px;padding:8px 2px;text-align:center;font-size:11px;color:var(--muted)}.day input{display:block;margin:7px auto 0;accent-color:#454e40}.notice{background:#f5f6f1;border-radius:10px;padding:11px;font-size:12px;line-height:1.45;color:#62685d}.history{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;font-size:12px;line-height:1.5}.history strong{color:var(--ink)}input[type=file]{display:none}.foot{font-size:11px;color:var(--muted);line-height:1.5;margin:18px 2px}@media(min-width:580px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-</style></head>
-<body><main>
-<div class="top"><div class="eyebrow">PERSONAL DEVELOPMENT RPG</div><div class="date" id="today"></div></div>
-<h1>Personal Overview</h1><p class="sub">Improving every day.</p>
-<section class="card"><div class="row"><div><div class="level" id="level">LEVEL 1</div><div class="xp"><span id="total">0</span> points</div></div><div class="small" id="next">1,000 points to next level</div></div><div class="bar"><div class="fill" id="progress"></div></div><div class="small" id="progressText">0 / 1,000 points</div></section>
-<section class="card"><div class="row"><h2>Attributes</h2><span class="small">Starting level: 50</span></div><div class="grid" id="attributes"></div><p class="small" style="margin:12px 0 0">Scores are updated automatically during your weekly review. They reflect tracked consistency, not your worth as a person.</p></section>
-<section class="card"><div class="row"><h2>Daily targets</h2><span class="small" id="questCount">0 / 9 complete</span></div><div id="quests"></div><div class="actions"><button class="primary" id="bank">Record progression</button><button id="reset">Reset today's ticks</button></div><p class="small">Each completed target earns 10 points. Completing all nine earns a 30-point bonus. You can record progression once per day.</p></section>
-<section class="card"><h2>Weekly targets</h2><p class="small">Tick each day you make meaningful progress on your chosen weekly challenge.</p><div id="weeklyText" style="font-size:13px;margin:0 0 10px">Build consistency across the week.</div><div class="week" id="week"></div><div class="actions"><button id="editWeekly">Change weekly target</button></div></section>
-<section class="card"><h2>Daily review</h2><textarea id="review" placeholder="What went well today? What could you improve tomorrow?"></textarea><div class="actions"><button id="saveReview">Save review</button><button id="export">Export backup</button><label for="importFile"><span class="buttonlike"> </span><button type="button" id="importBtn">Import backup</button></label><input id="importFile" type="file" accept="application/json"></div><p class="small" id="saved"></p></section>
-<section class="card"><h2>Weekly attribute review</h2><div class="notice" id="weeklyStatus">Your scores begin at 50. At the end of each week, the tracker reviews your completed daily targets and weekly challenge consistency. Changes are gradual and explained below.</div><div id="changeLog"></div><div class="actions"><button class="primary" id="runReview">Complete weekly review</button></div><p class="small">A missed day does not automatically lower a score. Consistency over time matters more than a single good or bad day. Review can be completed once per week.</p></section>
-<p class="foot">Your progress is saved in this browser on this device. Export a backup regularly. If you replace this website, use Import backup if you need to restore progress.</p>
+:root {
+  --bg:#f5f5f1;
+  --card:#fff;
+  --ink:#20221f;
+  --muted:#777a73;
+  --line:#e5e5df;
+  --accent:#30362f;
+  --green:#537b58;
+  --red:#a34e46;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+main {max-width:760px;margin:auto;padding:26px 18px 60px}
+h1 {font-size:34px;letter-spacing:-1.3px;margin:8px 0}
+h2 {font-size:21px;margin:0}
+h3 {font-size:16px;margin:0}
+p {line-height:1.5}
+.sub {color:var(--muted);margin:8px 0 28px;font-size:17px}
+.card {
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  margin:18px 0;
+}
+.row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.muted {color:var(--muted)}
+.small {font-size:13px;color:var(--muted)}
+.level {font-size:13px;color:var(--muted);letter-spacing:.5px}
+.big {font-size:34px;font-weight:750;letter-spacing:-1px;margin:3px 0}
+.progress {
+  height:10px;
+  background:#ededE8;
+  border-radius:20px;
+  overflow:hidden;
+  margin:18px 0 8px;
+}
+.progress div {height:100%;background:var(--accent);width:0%}
+.attribute {
+  padding:16px 0;
+  border-bottom:1px solid var(--line);
+}
+.attribute:last-child {border:0}
+.score {font-size:19px;font-weight:700}
+.track {
+  height:7px;
+  background:#eee;
+  border-radius:10px;
+  margin-top:10px;
+  overflow:hidden;
+}
+.track div {height:100%;background:var(--green);border-radius:10px}
+.quest {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:15px 0;
+  border-bottom:1px solid var(--line);
+  line-height:1.4;
+}
+.quest:last-child {border:0}
+input[type=checkbox] {
+  width:23px;
+  height:23px;
+  accent-color:var(--accent);
+  flex-shrink:0;
+}
+.quest label {flex:1}
+button {
+  background:var(--accent);
+  color:white;
+  border:0;
+  border-radius:13px;
+  padding:13px 17px;
+  font-size:15px;
+  cursor:pointer;
+}
+button.secondary {
+  background:white;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+button.danger {
+  background:#fff;
+  color:var(--red);
+  border:1px solid var(--line);
+}
+button:disabled {opacity:.45;cursor:not-allowed}
+.actions {display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
+input[type=text],textarea {
+  width:100%;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  font:inherit;
+  background:white;
+  color:var(--ink);
+  margin:10px 0;
+}
+textarea {min-height:90px;resize:vertical}
+.day {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin:8px 12px 8px 0;
+  font-size:14px;
+}
+.day input {width:19px;height:19px;accent-color:var(--accent)}
+.note {
+  padding:13px;
+  background:var(--bg);
+  border-radius:12px;
+  margin-top:12px;
+  font-size:14px;
+  line-height:1.5;
+}
+.change {padding:12px 0;border-bottom:1px solid var(--line)}
+.change:last-child {border:0}
+.good {color:var(--green)}
+.bad {color:var(--red)}
+footer {text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+@media(max-width:420px) {
+  main {padding:22px 14px 50px}
+  .card {padding:20px}
+  h1 {font-size:31px}
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="level">PERSONAL DEVELOPMENT</div>
+  <h1>Personal Overview</h1>
+  <p class="sub">Improving every day.</p>
+</header>
+
+<section class="card">
+  <div class="row">
+    <div>
+      <div class="level" id="level">LEVEL 1</div>
+      <div class="big" id="points">0 points</div>
+    </div>
+    <div class="muted" id="next">1,000 points to next level</div>
+  </div>
+  <div class="progress"><div id="xpbar"></div></div>
+  <div class="small" id="xptext">0 / 1,000 points</div>
+</section>
+
+<section class="card">
+  <div class="row">
+    <h2>Attributes</h2>
+    <span class="muted">Starting level: 50</span>
+  </div>
+  <p class="muted">Scores update automatically during your weekly review. They reflect tracked consistency, not your worth as a person.</p>
+  <div id="attributes"></div>
+</section>
+
+<section class="card">
+  <div class="row">
+    <h2>Daily targets</h2>
+    <span class="muted" id="counter">0 / 9 complete</span>
+  </div>
+  <div id="quests"></div>
+  <div class="actions">
+    <button id="record">Record progression</button>
+    <button class="secondary" id="reset">Reset today's ticks</button>
+  </div>
+  <p class="small">Each completed target earns 10 points. Completing all nine earns a 30-point bonus. You can record progression once per day.</p>
+  <div id="recordStatus" class="note" hidden></div>
+</section>
+
+<section class="card">
+  <h2>Weekly targets</h2>
+  <p class="muted">Choose something meaningful to work towards this week.</p>
+  <input id="weeklyName" type="text" placeholder="Write your weekly target">
+  <div id="weeklyDays"></div>
+  <p class="small" id="weeklyCount">0 / 7 days of progress</p>
+  <button class="secondary" id="saveWeekly">Save weekly target</button>
+</section>
+
+<section class="card">
+  <h2>Daily review</h2>
+  <p class="muted">Take a moment to reflect on your day.</p>
+  <textarea id="review" placeholder="What went well today? What could I improve tomorrow?"></textarea>
+  <button id="saveReview">Save daily review</button>
+  <div class="small" id="reviewStatus"></div>
+</section>
+
+<section class="card">
+  <h2>Weekly attribute review</h2>
+  <p class="muted">Once a week, your tracked consistency influences your attributes. Scores can rise or fall gradually.</p>
+  <div class="note">
+    <strong>How progression works</strong><br>
+    Consistent completion of relevant daily targets can increase an attribute by 1 point. Very low consistency can decrease it by 1 point. Scores stay between 1 and 100.
+  </div>
+  <div id="weeklyReviewStatus" class="small" style="margin:14px 0"></div>
+  <button id="weeklyReview">Complete weekly review</button>
+  <div id="changes"></div>
+</section>
+
+<section class="card">
+  <h2>Backup and restore</h2>
+  <p class="muted">Keep a copy of your progress safe. You can export a backup or restore one previously saved.</p>
+  <div class="actions">
+    <button id="export">Export backup</button>
+    <button class="secondary" id="importButton">Import backup</button>
+    <input id="importFile" type="file" accept=".json,application/json" hidden>
+  </div>
+  <div class="small" id="backupStatus"></div>
+</section>
+
+<footer>Your progress is saved on this device in this browser.</footer>
 </main>
+
 <script>
-const attrs=["Physical","Intellectual","Discipline","Financial","Social","Emotional","Practical","Experiential","Character"];
-const quests=[
- {t:"Exercise",a:["Physical","Discipline"]},
- {t:"Maintain my diet",a:["Physical","Discipline"]},
- {t:"Drink enough water",a:["Physical","Discipline"]},
- {t:"Read a chapter",a:["Intellectual","Discipline"]},
- {t:"Learn something new",a:["Intellectual","Experiential"]},
- {t:"Make progress on quitting snus",a:["Discipline","Physical","Character"]},
- {t:"Stick to my budget",a:["Financial","Discipline"]},
- {t:"Get something productive done",a:["Practical","Discipline"]},
- {t:"Plan for tomorrow",a:["Practical","Emotional"]}
+(function(){
+"use strict";
+
+const attrs = [
+"Physical","Intellectual","Discipline","Financial","Social",
+"Emotional","Practical","Experiential","Character"
 ];
-const key="myRpgDashboardV1";
-const todayKey=()=>new Date().toISOString().slice(0,10);
-const mondayKey=()=>{let d=new Date();let day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)};
-let data={xp:0,scores:Object.fromEntries(attrs.map(a=>[a,50])),week:{},review:"",done:{},lastDay:todayKey(),bankedDay:"",weeklyTarget:"Build consistency across the week.",dailyLog:{},weeklyReviews:[],lastReviewWeek:""};
-try{const old=JSON.parse(localStorage.getItem(key)||"null");if(old){data={...data,...old};data.scores=Object.fromEntries(attrs.map(a=>[a,50]));data.dailyLog=data.dailyLog||{};data.weeklyReviews=data.weeklyReviews||[];data.week=data.week||{};data.done=data.done||{};data.weeklyTarget=data.weeklyTarget||"Build consistency across the week.";}}catch(e){}
-function save(){localStorage.setItem(key,JSON.stringify(data))}
-function render(){let now=new Date();document.getElementById('today').textContent=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});let level=Math.floor(data.xp/1000)+1,within=data.xp%1000;document.getElementById('level').textContent='LEVEL '+level;document.getElementById('total').textContent=data.xp.toLocaleString('en-GB');document.getElementById('next').textContent=(1000-within).toLocaleString('en-GB')+' points to next level';document.getElementById('progress').style.width=(within/10)+'%';document.getElementById('progressText').textContent=within+' / 1,000 points';
- document.getElementById('attributes').innerHTML=attrs.map(a=>{let s=data.scores[a]??50;let latest=(data.lastChanges||{})[a];return `<div class="attr"><strong>${a}</strong><div class="scoreline"><span class="score">${s}</span><span class="delta">${latest?latest.delta>0?'+'+latest.delta:latest.delta===0?'No change':latest.delta:'' : ' / 100'}</span></div><div class="mini"><span style="width:${s}%"></span></div><div class="reason">${latest?latest.reason:'Awaiting first weekly review'}</div></div>`}).join('');
- document.getElementById('quests').innerHTML=quests.map((q,i)=>`<div class="quest"><input type="checkbox" id="q${i}" ${data.done[i]?'checked':''} ${data.bankedDay===todayKey()?'disabled':''}><label for="q${i}">${q.t}<small>Daily target</small></label><span class="points">+10 points</span></div>`).join('');document.querySelectorAll('#quests input').forEach(el=>el.onchange=()=>{data.done[el.id.slice(1)]=el.checked;save();count()});count();
- document.getElementById('weeklyText').textContent=data.weeklyTarget;document.getElementById('week').innerHTML=['M','T','W','T','F','S','S'].map((d,i)=>`<label class="day">${d}<input type="checkbox" data-week="${i}" ${data.week[i]?'checked':''}></label>`).join('');document.querySelectorAll('[data-week]').forEach(el=>el.onchange=()=>{data.week[el.dataset.week]=el.checked;save()});document.getElementById('review').value=data.review||'';document.getElementById('bank').disabled=data.bankedDay===todayKey();document.getElementById('bank').textContent=data.bankedDay===todayKey()?"Today's progression recorded":"Record progression";
- let reviewed=data.lastReviewWeek===mondayKey();document.getElementById('runReview').disabled=reviewed;document.getElementById('runReview').textContent=reviewed?'This week reviewed':'Complete weekly review';document.getElementById('weeklyStatus').textContent=reviewed?'This week’s review is complete. Your next review will be available next Monday.':'Your scores begin at 50. At the end of each week, the tracker reviews your recorded daily targets and weekly challenge consistency. Changes are gradual and explained below.';let logs=data.weeklyReviews||[];document.getElementById('changeLog').innerHTML=logs.slice(-3).reverse().map(r=>`<div class="history"><strong>${r.date}</strong><br>${r.lines.map(x=>x).join('<br>')}</div>`).join('');}
-function count(){let n=quests.filter((q,i)=>data.done[i]).length;document.getElementById('questCount').textContent=n+' / 9 complete'}
-document.getElementById('bank').onclick=()=>{if(data.bankedDay===todayKey())return;let n=quests.filter((q,i)=>data.done[i]).length;if(!n){alert('Complete at least one daily target before recording progression.');return}let earned=n*10+(n===9?30:0);data.xp+=earned;data.dailyLog[todayKey()]={completed:quests.map((q,i)=>!!data.done[i]),count:n,review:data.review||''};data.bankedDay=todayKey();save();render();alert('+'+earned+' points recorded.');};
-document.getElementById('reset').onclick=()=>{if(data.bankedDay===todayKey()){alert("Today's progression has already been recorded. Your points are protected.");return}if(confirm("Reset today's target ticks? This won't remove points already recorded.")){data.done={};save();render()}};
-document.getElementById('saveReview').onclick=()=>{data.review=document.getElementById('review').value;save();document.getElementById('saved').textContent='Review saved.'};
-document.getElementById('editWeekly').onclick=()=>{let v=prompt('What is your weekly target?',data.weeklyTarget);if(v!==null&&v.trim()){data.weeklyTarget=v.trim();save();render()}};
-document.getElementById('runReview').onclick=()=>{if(data.lastReviewWeek===mondayKey())return;let start=new Date(mondayKey()+'T00:00:00');let dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let completed=Array(9).fill(0),days=0;for(let d=0;d<7;d++){let dt=new Date(start);dt.setDate(start.getDate()+d);let k=dt.toISOString().slice(0,10);let rec=data.dailyLog[k];if(rec){days++;rec.completed.forEach((v,i)=>{if(v)completed[i]++})}}
- let mapping={Physical:[0,1,2],Intellectual:[3,4],Discipline:[0,1,2,3,4,5,6,7,8],Financial:[6],Social:[],Emotional:[8],Practical:[7,8],Experiential:[4],Character:[5,7]};let weeklyTicks=Object.values(data.week||{}).filter(Boolean).length;let changes={};let lines=[];for(let a of attrs){let relevant=mapping[a];let total=relevant.length?relevant.reduce((s,i)=>s+completed[i],0)/(relevant.length*7):0;let delta=0,reason='No recorded evidence this week; score held steady.';if(relevant.length){if(total>=.65){delta=2;reason='Strong consistency across related daily targets.'}else if(total>=.35){delta=1;reason='Some consistent progress across related daily targets.'}else if(days>=5&&total<.12){delta=-1;reason='Very little activity recorded across a full week.'}}if(a==='Social'&&weeklyTicks>=5){delta=1;reason='Strong follow-through on the weekly challenge.'}if(a==='Experiential'&&weeklyTicks>=5){delta=1;reason='Strong follow-through on the weekly challenge.'}let old=data.scores[a]??50;let next=Math.max(1,Math.min(100,old+delta));data.scores[a]=next;changes[a]={delta:next-old,reason};lines.push(a+': '+(next-old>0?'+':'')+(next-old)+' — '+reason)}data.lastChanges=changes;data.lastReviewWeek=mondayKey();data.weeklyReviews=data.weeklyReviews||[];data.weeklyReviews.push({date:new Date().toLocaleDateString('en-GB'),lines});data.week={};save();render();alert('Weekly review complete. Your attribute changes are shown below.');};
-document.getElementById('export').onclick=()=>{data.review=document.getElementById('review').value;save();let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='my-rpg-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-document.getElementById('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());if(!confirm('Import this backup and replace the progress currently saved in this browser?'))return;data={...data,...incoming};data.scores=Object.fromEntries(attrs.map(a=>[a,Number(incoming.scores?.[a])||50]));save();render();alert('Backup imported.')}catch(err){alert('That file could not be read as a My RPG backup.')}e.target.value=''};
-document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
-render();save();
-</script></body></html>
+
+const quests = [
+{t:"Exercise",a:["Physical","Discipline"]},
+{t:"Maintain my diet",a:["Physical","Discipline"]},
+{t:"Drink enough water",a:["Physical","Discipline"]},
+{t:"Read a chapter",a:["Intellectual","Discipline"]},
+{t:"Learn something new",a:["Intellectual","Experiential"]},
+{t:"Make progress on quitting snus",a:["Discipline","Physical","Character"]},
+{t:"Stick to my budget",a:["Financial","Discipline"]},
+{t:"Get something productive done",a:["Practical","Discipline"]},
+{t:"Plan for tomorrow",a:["Practical","Emotional"]}
+];
+
+const key = "myRpgDashboardV1";
+const today = () => new Date().toISOString().slice(0,10);
+
+function weekStart(date=new Date()){
+  const d=new Date(date);
+  d.setHours(0,0,0,0);
+  const day=(d.getDay()+6)%7;
+  d.setDate(d.getDate()-day);
+  return d.toISOString().slice(0,10);
+}
+
+function freshData(){
+  return {
+    xp:0,
+    scores:Object.fromEntries(attrs.map(a=>[a,50])),
+    done:{},
+    logs:{},
+    recorded:{},
+    reviews:{},
+    weeklyName:"",
+    weeklyDays:{},
+    lastWeeklyReview:"",
+    changes:[]
+  };
+}
+
+let data=freshData();
+
+function load(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(key)||"null");
+    if(saved && typeof saved==="object"){
+      data={...freshData(),...saved};
+      data.scores={...freshData().scores,...(saved.scores||{})};
+      data.done=saved.done||{};
+      data.logs=saved.logs||{};
+      data.recorded=saved.recorded||{};
+      data.reviews=saved.reviews||{};
+      data.weeklyDays=saved.weeklyDays||{};
+      data.changes=saved.changes||[];
+
+      // Migrate older saved data where possible.
+      if(Array.isArray(saved.done)){
+        data.done[today()]=saved.done;
+      }
+      if(typeof data.xp!=="number") data.xp=0;
+      attrs.forEach(a=>{
+        let n=Number(data.scores[a]);
+        data.scores[a]=Number.isFinite(n)?Math.max(1,Math.min(100,n)):50;
+      });
+    }
+  }catch(e){
+    data=freshData();
+  }
+}
+
+function save(){
+  try{
+    localStorage.setItem(key,JSON.stringify(data));
+  }catch(e){
+    alert("Your browser could not save the changes. Please export a backup.");
+  }
+}
+
+function todaysTicks(){
+  if(!Array.isArray(data.done[today()]) || data.done[today()].length!==quests.length){
+    data.done[today()]=Array(quests.length).fill(false);
+  }
+  return data.done[today()];
+}
+
+function renderPoints(){
+  const xp=Math.max(0,Number(data.xp)||0);
+  const level=Math.floor(xp/1000)+1;
+  const within=xp%1000;
+  document.getElementById("level").textContent="LEVEL "+level;
+  document.getElementById("points").textContent=xp.toLocaleString()+" points";
+  document.getElementById("next").textContent=(1000-within).toLocaleString()+" points to next level";
+  document.getElementById("xpbar").style.width=(within/10)+"%";
+  document.getElementById("xptext").textContent=within.toLocaleString()+" / 1,000 points";
+}
+
+function renderAttributes(){
+  const root=document.getElementById("attributes");
+  root.innerHTML="";
+  attrs.forEach(a=>{
+    const score=data.scores[a];
+    const el=document.createElement("div");
+    el.className="attribute";
+    const row=document.createElement("div");
+    row.className="row";
+    const name=document.createElement("strong");
+    name.textContent=a;
+    const value=document.createElement("span");
+    value.className="score";
+    value.textContent=score+"/100";
+    row.append(name,value);
+    const track=document.createElement("div");
+    track.className="track";
+    const fill=document.createElement("div");
+    fill.style.width=score+"%";
+    track.append(fill);
+    el.append(row,track);
+    root.append(el);
+  });
+}
+
+function renderQuests(){
+  const root=document.getElementById("quests");
+  root.innerHTML="";
+  const ticks=todaysTicks();
+  let count=0;
+  quests.forEach((q,i)=>{
+    if(ticks[i]) count++;
+    const row=document.createElement("div");
+    row.className="quest";
+    const check=document.createElement("input");
+    check.type="checkbox";
+    check.checked=!!ticks[i];
+    check.id="quest"+i;
+    check.disabled=!!data.recorded[today()];
+    check.addEventListener("change",()=>{
+      ticks[i]=check.checked;
+      save();
+      renderQuests();
+    });
+    const label=document.createElement("label");
+    label.htmlFor=check.id;
+    label.textContent=q.t;
+    row.append(check,label);
+    root.append(row);
+  });
+  document.getElementById("counter").textContent=count+" / 9 complete";
+  document.getElementById("record").disabled=!!data.recorded[today()];
+  document.getElementById("recordStatus").hidden=!data.recorded[today()];
+  document.getElementById("recordStatus").textContent=data.recorded[today()]
+    ?"Today's progression has already been recorded. Come back tomorrow."
+    :"";
+}
+
+function renderWeekly(){
+  document.getElementById("weeklyName").value=data.weeklyName||"";
+  const root=document.getElementById("weeklyDays");
+  root.innerHTML="";
+  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const w=weekStart();
+  if(!data.weeklyDays[w]) data.weeklyDays[w]=Array(7).fill(false);
+  days.forEach((day,i)=>{
+    const label=document.createElement("label");
+    label.className="day";
+    const check=document.createElement("input");
+    check.type="checkbox";
+    check.checked=!!data.weeklyDays[w][i];
+    check.addEventListener("change",()=>{
+      data.weeklyDays[w][i]=check.checked;
+      save();
+      renderWeekly();
+    });
+    label.append(check,document.createTextNode(day));
+    root.append(label);
+  });
+  const count=data.weeklyDays[w].filter(Boolean).length;
+  document.getElementById("weeklyCount").textContent=count+" / 7 days of progress";
+}
+
+function renderReview(){
+  document.getElementById("review").value=data.reviews[today()]||"";
+}
+
+function renderChanges(){
+  const root=document.getElementById("changes");
+  root.innerHTML="";
+  if(!data.changes.length) return;
+  data.changes.slice(-9).reverse().forEach(c=>{
+    const el=document.createElement("div");
+    el.className="change";
+    const strong=document.createElement("strong");
+    strong.textContent=c.attribute+" ";
+    const value=document.createElement("span");
+    value.className=c.amount>0?"good":"bad";
+    value.textContent=(c.amount>0?"+":"")+c.amount;
+    const detail=document.createElement("div");
+    detail.className="small";
+    detail.textContent=c.reason+" ("+c.date+")";
+    el.append(strong,value,detail);
+    root.append(el);
+  });
+}
+
+function renderWeeklyReviewStatus(){
+  const last=data.lastWeeklyReview;
+  document.getElementById("weeklyReviewStatus").textContent=
+    last===weekStart()
+      ?"This week's attribute review has been completed."
+      :"Your weekly attribute review is ready when you are.";
+  document.getElementById("weeklyReview").disabled=last===weekStart();
+}
+
+function render(){
+  renderPoints();
+  renderAttributes();
+  renderQuests();
+  renderWeekly();
+  renderReview();
+  renderChanges();
+  renderWeeklyReviewStatus();
+}
+
+document.getElementById("record").addEventListener("click",()=>{
+  const d=today();
+  if(data.recorded[d]) return;
+  const ticks=todaysTicks();
+  const count=ticks.filter(Boolean).length;
+  const earned=count*10+(count===9?30:0);
+  data.xp+=earned;
+  data.logs[d]=ticks.map(Boolean);
+  data.recorded[d]=true;
+  save();
+  render();
+  alert("Progress recorded! You earned "+earned+" points.");
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  if(data.recorded[today()]){
+    alert("Today's progression has already been recorded.");
+    return;
+  }
+  if(!confirm("Reset all of today's ticks?")) return;
+  data.done[today()]=Array(quests.length).fill(false);
+  save();
+  render();
+});
+
+document.getElementById("saveWeekly").addEventListener("click",()=>{
+  data.weeklyName=document.getElementById("weeklyName").value.trim();
+  save();
+  alert("Weekly target saved.");
+});
+
+document.getElementById("saveReview").addEventListener("click",()=>{
+  data.reviews[today()]=document.getElementById("review").value;
+  save();
+  document.getElementById("reviewStatus").textContent="Review saved.";
+});
+
+document.getElementById("weeklyReview").addEventListener("click",()=>{
+  const w=weekStart();
+  if(data.lastWeeklyReview===w) return;
+  if(!confirm("Complete your weekly attribute review using your recorded daily targets from the last seven days?")) return;
+
+  const changes=[];
+  const end=new Date();
+  const start=new Date(end);
+  start.setDate(end.getDate()-6);
+
+  attrs.forEach(attribute=>{
+    let eligible=0;
+    let completed=0;
+    quests.forEach((q,i)=>{
+      if(!q.a.includes(attribute)) return;
+      for(let day=new Date(start);day<=end;day.setDate(day.getDate()+1)){
+        const date=day.toISOString().slice(0,10);
+        if(data.logs[date]){
+          eligible++;
+          if(data.logs[date][i]) completed++;
+        }
+      }
+    });
+
+    if(eligible===0) return;
+    const ratio=completed/eligible;
+    let amount=0;
+    let reason="";
+    if(ratio>=0.7){
+      amount=1;
+      reason="Strong consistency: "+completed+" of "+eligible+" relevant opportunities completed.";
+    }else if(ratio<=0.25){
+      amount=-1;
+      reason="Low consistency: "+completed+" of "+eligible+" relevant opportunities completed.";
+    }
+    if(amount!==0){
+      data.scores[attribute]=Math.max(1,Math.min(100,data.scores[attribute]+amount));
+      changes.push({attribute,amount,reason,date:today()});
+    }
+  });
+
+  data.changes.push(...changes);
+  data.lastWeeklyReview=w;
+  save();
+  render();
+  if(changes.length===0){
+    alert("Review complete. There wasn't enough recorded activity to change any attributes this week.");
+  }else{
+    alert("Weekly review complete. Your attribute scores have been updated.");
+  }
+});
+
+document.getElementById("export").addEventListener("click",()=>{
+  save();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="my-rpg-backup-"+today()+".json";
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById("backupStatus").textContent="Backup exported.";
+});
+
+document.getElementById("importButton").addEventListener("click",()=>{
+  document.getElementById("importFile").click();
+});
+
+document.getElementById("importFile").addEventListener("change",async event=>{
+  const file=event.target.files[0];
+  if(!file) return;
+  try{
+    const imported=JSON.parse(await file.text());
+    if(!imported || typeof imported!=="object" || !("xp" in imported)){
+      throw new Error("Invalid backup");
+    }
+    if(!confirm("Import this backup? It will replace the progress currently saved in this browser.")) return;
+    data={...freshData(),...imported};
+    data.scores={...freshData().scores,...(imported.scores||{})};
+    attrs.forEach(a=>{
+      const n=Number(data.scores[a]);
+      data.scores[a]=Number.isFinite(n)?Math.max(1,Math.min(100,n)):50;
+    });
+    save();
+    render();
+    document.getElementById("backupStatus").textContent="Backup imported successfully.";
+  }catch(e){
+    alert("That file doesn't look like a valid My RPG backup.");
+  }
+  event.target.value="";
+});
+
+load();
+render();
+save();
+
+})();
+</script>
+</body>
+</html>
